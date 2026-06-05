@@ -1,0 +1,155 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TURPOTIC - Precision Motion</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     SPLASH SCREEN
+══════════════════════════════════════ -->
+  <div id="splash-screen">
+  <div class="splash-container">
+    
+    <div class="figma-style-logo">
+      <div class="circle-piece c-top-left"></div>
+      <div class="circle-piece c-top-right"></div>
+      <div class="circle-piece c-mid-left"></div>
+      <div class="circle-piece c-mid-right"></div>
+      <div class="circle-piece c-bottom-left"></div>
+    </div>
+    
+   
+    
+    <div class="loading-bar-container">
+      <div class="loading-bar-fill"></div>
+    </div>
+  </div>
+</div>
+
+ 
+
+<div id="p1" class="page active">
+   <!-- شريط التنقل العلوي   بالخلفية البيضاء    -->
+<nav class="main-navbar">
+    <!-- اسم الموقع (لوجو النص) في أقصى اليسار -->
+    <div class="nav-logo">
+        <a href="index.html"><span>TURPO</span>TIC</a>
+    </div>
+
+    <!-- الروابط الأساسية للموقع مجمعة في المنتصف -->
+    <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="marketplace.html">Car</a></li>
+        <li><a href="rent.html">Rent</a></li>
+        <li><a href="motorcycles.html">Motorcycles</a></li>
+    </ul>
+
+    <!-- الأيقونات التفاعلية في أقصى اليمين مع الحفاظ على مسافات متناسقة -->
+    <div class="nav-right">
+               <span class="nav-icon" onclick="window.location.href='luminous.html '">🔍</span>
+        <span class="nav-icon" onclick="window.location.href='checkout.html'">🛒</span>
+        <span class="nav-icon" onclick="window.location.href='login.html'">👤</span>
+    </div>
+</nav>
+ 
+
+<!-- ══════════════════════════════════════
+     PAGE 1 – HOME
+══════════════════════════════════════ -->
+ 
+   <section class="hero-container">
+    <!-- الجزء الأيسر: يحتوي على النصوص والأزرار -->
+    <div class="hero-left">
+        <span class="sub-headline">EVOLUTION OF SPEED</span>
+        <h1 class="main-headline">PRECISION <br><span class="blue-text">MOTION</span></h1>
+        <p class="hero-description">
+            A curated gallery of automotive masterpieces. Where engineering excellence meets unparalleled aesthetic design.
+        </p>
+        <div class="hero-buttons">
+            <a href="#" class="btn btn-primary">Explore Collection</a>
+            <a href="#" class="btn btn-secondary">Book Appraisal</a>
+        </div>
+    </div>
+
+    <!-- الجزء الأيمن: يحتوي على كود الصورة مدمجة كخلفية أو عنصر -->
+    <div class="hero-right"></div>
+</section>
+
+  <section class="section">
+    <h2 class="s-title">SELECT YOUR PATH</h2>
+    <p class="s-sub">Tailored experiences for every enthusiast</p>
+    <div class="path-grid">
+      <div class="path-card" onclick="window.location.href='marketplace.html'">
+        <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=500&q=80" alt="Buy">
+        <div class="path-label">Buy</div>
+      </div>
+      <div class="path-card" onclick="window.location.href='rent.html'">
+        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500&q=80" alt="Rent">
+        <div class="path-label">Rent</div>
+      </div>
+      <div class="path-card" onclick="window.location.href='motorcycles.html'">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80" alt="Motorcycles">
+        <div class="path-label">Motorcycles</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery-wrap">
+    <h2 class="s-title">Featured Gallery.</h2>
+    <div class="gallery-grid">
+      <div class="g-card g-main">
+        <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=700&q=80" alt="Lamborghini">
+        <div class="g-ov"></div>
+        <div class="g-info">
+          <div class="g-tag">NEW ARRIVAL</div>
+          <div class="g-name">Lamborghini Aventador</div>
+          <div class="g-price">From $10 Rental · $249,000</div>
+        </div>
+      </div>
+       <div class="main-container">
+    <div class="right-column">
+        <div class="product-box">
+                             <img src="   https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?w=800">
+            <h2 class="product-title">PHANTOM X-Rider</h2>
+            <div class="product-price">$32,500</div>
+        </div>
+
+        <div class="vintage-box">
+            <h2 class="product-title">VINTAGE PRESTIGE</h2>
+            <p class="product-desc">Certified 1968 restorations.</p>
+            <a href="#" class="view-collection">VIEW COLLECTION ></a>
+        </div>
+    </div>
+
+    <div class="left-column">
+        </div>
+</div>
+   
+  </section>
+
+
+  
+  <footer>
+    <div class="footer-brand">
+      <div class="logo"><span>TURPO</span>TIC</div>
+      <p>Redefining the automotive experience through curated excellence and technical precision.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Gallery</h4>
+      <a href="marketplace.html">Sale</a><a href="rent.html">Rent</a><a href="motorcycles.html">Motorcycles</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="#">Contact</a><a href="#">Privacy Policy</a><a href="#">Terms of service</a>
+    </div>
+    <div class="footer-copy">© 2026 TURPOTIC GALLERY. PRECISION MOTION DEFINED.</div>
+  </footer>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

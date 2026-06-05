@@ -1,0 +1,200 @@
+
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TURPOTIC | Rent Cars</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <div id="p1" class="page active">
+   <!-- شريط التنقل العلوي   بالخلفية البيضاء    -->
+<nav class="main-navbar">
+    <!-- اسم الموقع (لوجو النص) في أقصى اليسار -->
+    <div class="nav-logo">
+        <a href="index.html"><span>TURPO</span>TIC</a>
+    </div>
+
+    <!-- الروابط الأساسية للموقع مجمعة في المنتصف -->
+    <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="marketplace.html">Car</a></li>
+        <li><a href="rent.html">Rent</a></li>
+        <li><a href="motorcycles.html">Motorcycles</a></li>
+    </ul>
+
+    <!-- الأيقونات التفاعلية في أقصى اليمين مع الحفاظ على مسافات متناسقة -->
+    <div class="nav-right">
+                        <span class="nav-icon" onclick="window.location.href='luminous.html ' ">🔍</span>
+        <span class="nav-icon" onclick="window.location.href='checkout.html'">🛒</span>
+        <span class="nav-icon" onclick="window.location.href='login.html'">👤</span>
+    </div>
+</nav>
+ 
+</head>
+<body>
+
+     
+     <!-- القسم الرئيسي الكامل (Hero Section) -->
+<header class="rent-hero">
+    
+    <!-- 1. السكشن الخاص بالكلام (الجهة اليسرى) -->
+    <div class="rent-hero-left">
+        <span class="badge-premium">PREMIUM PERFORMANCE FLEET</span>
+        <h1>Rent the<br><span class="blue-text">Extraordinary</span></h1>
+        <p class="hero-desc">A curated gallery of automotive masterpieces. Where engineering excellence meets unparalleled aesthetic design.</p>
+        
+        <!-- أزرار التحكم والاتصال -->
+        <div class="hero-rent-btns">
+            <button class="btn-explore-fleet">Explore Fleet</button>
+            <button class="btn-concierge">View Concierge</button>
+        </div>
+    </div>
+    
+    <!-- 2. السكشن الخاص بالصورة والكارت (الجهة اليمنى) -->
+    <div class="rent-hero-right">
+        <!-- الشكل الهندسي الخلفي المائل باللون الأزرق الخفيف -->
+        <div class="bg-shape-decoration"></div>
+        
+        <!-- الكارت الأبيض الكبير المائل -->
+        <div class="suv-bg-card-tilted">
+  <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=1000&auto=format&fit=crop" 
+     alt="Normal Sedan Car" 
+     style="width: 100%; display: block; object-fit: cover;">
+      
+        </div>
+    </div>
+
+</header>
+
+    <section class="rent-filter-bar">
+        <div class="filter-pills">
+            <button class="pill-btn active">ALL VEHICLES</button>
+            <button class="pill-btn">SPORT</button>
+            <button class="pill-btn">EXECUTIVE</button>
+            <button class="pill-btn">OFF-ROAD</button>
+        </div>
+        <span class="results-text">SHOWING 24 RESULTS</span>
+    </section>
+
+    <section class="rent-grid-section">
+        <div class="rent-cards-grid">
+
+            <div class="rent-card">
+                <div class="rent-img-holder">
+                    <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=500&q=80" alt="Porsche 911">
+                    <span class="rent-price-badge">$450 <small>/ DAY</small></span>
+                </div>
+                <div class="rent-info-body">
+                    <h3>911 CARRERA S</h3>
+                    <p class="rent-sub">HERITAGE SILVER | 2024</p>
+                    
+                    <div class="rent-specs-row">
+                        <div class="spec-item"><span class="lbl">INSURANCE</span><span class="val">$2,800 <small>ded.</small></span></div>
+                        <div class="spec-item"><span class="lbl">TRANSMISSION</span><span class="val">PDK Auto</span></div>
+                    </div>
+
+                    <div class="rent-duration-selector">
+                        <button class="duration-btn active">Daily</button>
+                        <button class="duration-btn">Weekly</button>
+                        <button class="duration-btn">Monthly</button>
+                    </div>
+
+                    <button class="btn-rent-now">RENT NOW</button>
+                </div>
+            </div>
+
+            <div class="rent-card">
+                <div class="rent-img-holder">
+                    <img src=" https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=600&h=350&q=80">
+                    <span class="rent-price-badge">$850 <small>/ DAY</small></span>
+                </div>
+                <div class="rent-info-body">
+                    <h3>F8 TRIBUTO</h3>
+                    <p class="rent-sub">ROSSO CORSA | 2024</p>
+                    
+                    <div class="rent-specs-row">
+                        <div class="spec-item"><span class="lbl">INSURANCE</span><span class="val">$3,500 <small>ded.</small></span></div>
+                        <div class="spec-item"><span class="lbl">TRANSMISSION</span><span class="val">F1 Dual-Clutch</span></div>
+                    </div>
+
+                    <div class="rent-duration-selector">
+                        <button class="duration-btn active">Daily</button>
+                        <button class="duration-btn">Weekly</button>
+                        <button class="duration-btn">Monthly</button>
+                    </div>
+
+                    <button class="btn-rent-now">RENT NOW</button>
+                </div>
+            </div>
+
+            <div class="rent-card">
+                <div class="rent-img-holder">
+                   <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=500&q=80" alt="Buy">
+                    <span class="rent-price-badge">$750 <small>/ DAY</small></span>
+                </div>
+                <div class="rent-info-body">
+                    <h3>VANTAGE V8</h3>
+                    <p class="rent-sub">HERITAGE SILVER | 2024</p>
+                    
+                    <div class="rent-specs-row">
+                        <div class="spec-item"><span class="lbl">INSURANCE</span><span class="val">$2,500 <small>ded.</small></span></div>
+                        <div class="spec-item"><span class="lbl">TRANSMISSION</span><span class="val">8-Speed Auto</span></div>
+                    </div>
+
+                    <div class="rent-duration-selector">
+                        <button class="duration-btn active">Daily</button>
+                        <button class="duration-btn">Weekly</button>
+                        <button class="duration-btn">Monthly</button>
+                    </div>
+
+                    <button class="btn-rent-now">RENT NOW</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="features-section">
+        <div class="features-wrapper">
+            <div class="features-left-cards">
+                <div class="feat-box">
+                    <div class="feat-icon"><i class="fa-solid fa-shield-hasped"></i></div>
+                    <h4>Full Coverage</h4>
+                    <p>Comprehensive premium insurance included with every high-end rental.</p>
+                </div>
+                <div class="feat-box">
+                    <div class="feat-icon"><i class="fa-solid fa-truck-ramp-box"></i></div>
+                    <h4>Concierge Delivery</h4>
+                    <p>We deliver your vehicle to your doorstep or airport terminal.</p>
+                </div>
+            </div>
+            <div class="features-right-text">
+                <h2>WHY RENT FROM THE GALLERY?</h2>
+                <p>Our vehicles are more than machines — they are curated experiences. Each rental undergoes a 150-point precision check to ensure absolute performance and aesthetic perfection.</p>
+                <a href="#" class="learn-more-link">LEARN ABOUT OUR STANDARDS <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+ <footer>
+    <div class="footer-brand">
+      <div class="logo"><span>TURPO</span>TIC</div>
+      <p>Redefining the automotive experience through curated excellence and technical precision.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Gallery</h4>
+      <a href="marketplace.html">Sale</a><a href="rent.html">Rent</a><a href="motorcycles.html">Motorcycles</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="#">Contact</a><a href="#">Privacy Policy</a><a href="#">Terms of service</a>
+    </div>
+    <div class="footer-copy">© 2026 TURPOTIC GALLERY. PRECISION MOTION DEFINED.</div>
+  </footer>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

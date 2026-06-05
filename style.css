@@ -1,0 +1,1871 @@
+ /* ══════════════════════════════════════
+   RESET & VARIABLES
+══════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#2563eb;--blue-l:#3b82f6;--blue-d:#1d4ed8;
+  --dark:#0a0a0f;--dark2:#111118;--dark3:#1a1a2e;
+  --white:#fff;--gray:#6b7280;--gray-l:#f3f4f6;--gray-b:#e5e7eb;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Barlow',sans-serif;background:#fff;color:#111;overflow-x:hidden}
+img{display:block}
+a{text-decoration:none}
+button{font-family:'Barlow',sans-serif;cursor:pointer}
+
+/* ══════════════════════════════════════
+   SPLASH SCREEN
+══════════════════════════════════════ */
+ /* 1. الخلفية البيضاء الكاملة لشاشة التحميل */
+#splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.splash-container {
+    text-align: center;
+}
+
+/* 2. حاوية اللوجو الهندسي */
+.figma-style-logo {
+    position: relative;
+    width: 60px;
+    height: 90px;
+    margin: 0 auto 30px auto;
+}
+
+/* جعل جميع الدوائر سوداء مفرغة (حدود فقط) وخلفية شفافة */
+.circle-piece {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 3px solid #111111; /* اللون الأسود المفرغ */
+    background-color: transparent; /* مفرغة من الداخل */
+    box-sizing: border-box;
+}
+
+/* هندسة الأشكال المنحنية لقطع اللوجو */
+.c-top-left {
+    top: 0;
+    left: 0;
+    border-top-right-radius: 0;
+    /* أول دائرتين: يتم إعطاؤهما حركة دورانية مجمعة مدتها 3 ثوانٍ تتكرر باستمرار */
+    animation: firstTwoSpin 3s infinite ease-in-out;
+    transform-origin: 30px 15px; /* نقطة الارتكاز المركزية بين الدائرتين */
+    z-index: 5;
+}
+
+.c-top-right {
+    top: 0;
+    left: 30px;
+    animation: firstTwoSpin 3s infinite ease-in-out;
+    transform-origin: 0px 15px; /* لتلتف حول شريكتها */
+    z-index: 5;
+}
+
+/* الدوائر المتبقية تكون مخفية في البداية وتظهر بعد انتهاء الـ 3 دورات الأولى */
+.c-mid-left {
+    top: 30px;
+    left: 0;
+    border-bottom-right-radius: 0;
+    animation: revealOthers 3s infinite ease-in-out;
+}
+
+.c-mid-right {
+    top: 30px;
+    left: 30px;
+    animation: revealOthers 3s infinite ease-in-out;
+}
+
+.c-bottom-left {
+    top: 60px;
+    left: 0;
+    border-bottom-right-radius: 50%;
+    border-top-right-radius: 0;
+    animation: revealOthers 3s infinite ease-in-out;
+}
+
+/* 3. أنيميشن الدوران 3 مرات لأول دائرتين */
+@keyframes firstTwoSpin {
+    0% {
+        transform: rotate(0deg);
+    }
+    65% {
+        /* تدور 1080 درجة (أي 3 دورات كاملة: 360 * 3) وتستهلك 65% من وقت الحركة */
+        transform: rotate(1080deg); 
+    }
+    100% {
+        /* تثبت في مكانها الطبيعي بانتظار باقي الدوائر لتنتهي الدورة الموحدة */
+        transform: rotate(1080deg);
+    }
+}
+
+/* 4. أنيميشن ظهور واختفاء الدوائر المتبقية بالتزامن مع الحركة */
+@keyframes revealOthers {
+    0%, 64% {
+        opacity: 0;
+        transform: scale(0.5); /* تكون مخفية وصغيرة أثناء دوران أول دائرتين */
+    }
+    70% {
+        opacity: 1;
+        transform: scale(1.1); /* تنبثق بشكل تفاعلي سريع (Pop effect) */
+    }
+    90% {
+        opacity: 1;
+        transform: scale(1); /* تستقر في حجمها الطبيعي المفرغ */
+    }
+    100% {
+        opacity: 0; /* تختفي بسرعة في نهاية التكرار لتبدأ العملية من جديد */
+    }
+}
+
+ 
+
+.loading-bar-container {
+    width: 200px;
+    height: 4px;
+    background-color: #f5f5f5; 
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+ .loading-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #ff758c 0%, #ff7eb3 30%, #70a1ff 70%, #007bff 100%);
+    background-size: 200% 100%;
+    border-radius: 10px;
+    
+    
+    transition: width 6s cubic-bezier(0.1, 0.8, 0.3, 1);
+}
+/* ══════════════════════════════════════
+   PAGE SYSTEM
+══════════════════════════════════════ */
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+
+/* ══════════════════════════════════════
+   NAVBAR
+══════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  height:54px;display:flex;align-items:center;justify-content:between;
+  padding:0 48px;
+  background:rgba(10,10,15,.88);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.nav-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:19px;letter-spacing:2px;color:#fff}
+.nav-logo span{color:var(--blue)}
+.nav-links{display:flex;gap:26px;list-style:none}
+.nav-links a{color:rgba(255,255,255,.65);font-size:13px;font-weight:500;letter-spacing:.4px;transition:color .2s}
+.nav-links a.active,.nav-links a:hover{color:#fff}
+.nav-right{display:flex;align-items:center;gap:14px}
+.nav-icon{color:rgba(255,255,255,.65);font-size:15px;cursor:pointer;transition:color .2s}
+.nav-icon:hover{color:#fff}
+
+/* ══════════════════════════════════════
+   BUTTONS (GLOBAL)
+══════════════════════════════════════ */
+.btn-primary{background:var(--blue);color:#fff;padding:10px 22px;border-radius:6px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:background .2s}
+.btn-primary:hover{background:var(--blue-l)}
+.btn-outline{background:transparent;color:#fff;padding:10px 22px;border-radius:6px;font-size:13px;font-weight:600;border:1px solid rgba(255,255,255,.3);cursor:pointer;transition:all .2s}
+.btn-outline:hover{border-color:#fff}
+.btn-dark{background:var(--dark);color:#fff;padding:9px 0;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;border:none;width:100%;cursor:pointer;transition:background .2s}
+.btn-dark:hover{background:var(--blue)}
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer{
+  background:var(--dark2);color:rgba(255,255,255,.35);
+  padding:40px 60px;display:grid;
+  grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:30px;
+}
+.footer-brand .logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;letter-spacing:2px;color:#fff}
+.footer-brand .logo span{color:var(--blue)}
+.footer-brand p{font-size:12px;line-height:1.7;margin-top:10px;max-width:200px}
+.footer-col h4{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#fff;margin-bottom:12px}
+.footer-col a{display:block;color:rgba(255,255,255,.4);font-size:12px;margin-bottom:7px;transition:color .2s}
+.footer-col a:hover{color:#fff}
+.footer-copy{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.07);padding-top:20px;font-size:11px;text-align:right}
+
+/* ══════════════════════════════════════
+   PAGE 1 – HOME HERO
+══════════════════════════════════════ */
+ /* ===================================================
+   PAGE 1 - HOME HERO (اصلاح جذري لإظهار السيارة بجانب النص)
+   =================================================== */
+.hero1 {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 600px;
+    /* دمج التدرج اللوني المظلم من اليسار مع صورة السيارة من اليمين في سطر واحد */
+    background: linear-gradient(90deg, #0d0f14 0%, #0d0f14 35%, rgba(13, 15, 20, 0.5) 65%, rgba(13, 15, 20, 0) 100%), 
+                url('https://www.pngplay.com/wp-content/uploads/8/Lamborghini-PNG-Clipart-Background.png') !important;
+    background-size: cover, 52% auto !important; /* حجم السيارة متناسق تماماً لتفادي تداخل النصوص */
+    background-position: center, right 2% center !important; /* دفع السيارة لليمين بدقة */
+    background-repeat: no-repeat, no-repeat !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 8% !important;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* طبقة الإضاءة الشعاعية الخلفية */
+.h1-radial {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(0, 123, 255, 0.15) 0%, transparent 60%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* حاوية المحتوى والنصوص لتقف بثبات فوق الخلفية */
+.hero1-content {
+    position: relative;
+    max-width: 540px;
+    z-index: 2 !important;
+    text-align: left;
+}
+
+/* ضبط المسافات والأحجام بدقة الفيجما */
+.hero-badge {
+    display: inline-block;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.05);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.hero-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 4.2rem !important;
+    font-weight: 900;
+    line-height: 0.95 !important;
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.hero-title .blue {
+    color: #4d7cff !important;
+    display: block;
+}
+
+.hero-sub {
+    margin-top: 18px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: rgba(167, 154, 154, 0.6);
+    margin-bottom: 30px;
+}
+
+.hero-btns {
+    display: flex;
+    gap: 15px;
+}
+
+/* تأمين إخفاء عنصر الـ img التائه لتجنب العشوائية */
+.hero1-car {
+    display: none !important;
+}
+/* SELECT PATH */
+.section{padding:64px 60px}
+.s-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.s-sub{color:var(--gray);font-size:12px;margin-bottom:26px}
+.path-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.path-card{position:relative;border-radius:12px;overflow:hidden;height:178px;cursor:pointer}
+.path-card img{width:100%;height:100%;object-fit:cover;transition:transform .4s;filter:brightness(.65)}
+.path-card:hover img{transform:scale(1.06);filter:brightness(.85)}
+.path-label{position:absolute;bottom:14px;left:14px;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:1px}
+
+/* FEATURED GALLERY */
+.gallery-wrap{padding:0 60px 64px}
+.gallery-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}
+.g-card{position:relative;border-radius:14px;overflow:hidden;cursor:pointer}
+.g-main{height:260px}
+.g-side{display:flex;flex-direction:column;gap:14px}
+.g-side-card{height:123px;border-radius:14px;overflow:hidden;position:relative;cursor:pointer}
+.g-card img,.g-side-card img{width:100%;height:100%;object-fit:cover;transition:transform .4s;filter:brightness(.72)}
+.g-card:hover img,.g-side-card:hover img{transform:scale(1.05);filter:brightness(.88)}
+.g-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,transparent 55%)}
+.g-info{position:absolute;bottom:13px;left:13px;right:13px}
+.g-tag{background:var(--blue);color:#fff;font-size:9px;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:4px;text-transform:uppercase;display:inline-block;margin-bottom:6px}
+.g-name{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:#fff}
+.g-price{color:rgba(255, 255, 255, 0.6);font-size:11px;margin-top:2px}
+.g-link{font-size:10px;color:var(--blue-l);font-weight:700;letter-spacing:.5px;margin-top:6px;display:inline-block}
+/* ==========================================
+   تحديث شريط المقام الأبيض (MAIN NAVBAR) 
+   ========================================== */
+.main-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background-color: #ffffff !important; /* فرض الخلفية البيضاء */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); /* ظلال ناعمة */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* ترك مسافة كبيرة بين اللوجو والروابط */
+    padding: 0 6%; /* مسافة الأمان الجانبية */
+    box-sizing: border-box;
+    z-index: 1000;
+}
+
+/* تنسيق شعار الموقع في اليسار */
+.main-navbar .nav-logo a {
+    font-size: 1.45rem;
+    font-weight: 900;
+    color: #111111;
+    text-decoration: none;
+    letter-spacing: 1.5px;
+}
+
+.main-navbar .nav-logo a span {
+    color: #007bff; /* جزء اللوجو الأزرق */
+}
+
+/* تنسيق وتوزيع أزرار ومكونات الشريط */
+.main-navbar .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 35px; /* المسافة البينية المنتظمة للروابط */
+    margin: 0;
+    padding: 0;
+}
+
+.main-navbar .nav-links a {
+    text-decoration: none;
+    color: #1071c0; /* لون النصوص الداكن */
+    font-weight: 600;
+    font-size: 0.9rem;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+/* خط التفاعل السفلي عند تمرير مؤشر الماوس */
+.main-navbar .nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -6px;
+    left: 0;
+    background-color: #007bff;
+    transition: width 0.3s ease;
+}
+
+.main-navbar .nav-links a:hover::after,
+.main-navbar .nav-links a.active::after {
+    width: 100%;
+}
+
+.main-navbar .nav-links a:hover,
+.main-navbar .nav-links a.active {
+    color: #007bff;
+}
+
+/* الأيقونات في أقصى اليمين */
+.main-navbar .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.main-navbar .nav-icon {
+    font-size: 1.15rem;
+    color: #222222;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.main-navbar .nav-icon:hover {
+    color: #007bff;
+    transform: scale(1.1);
+}
+
+/* ══════════════════════════════════════
+   PAGE 2 – MARKETPLACE
+══════════════════════════════════════ */
+.hero2{
+  height:100vh;min-height:600px;
+  background:linear-gradient(135deg,#0d1929 0%,#080811 65%);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;padding-top:54px;
+}
+.h2-split{display:flex;align-items:center;gap:60px;z-index:2}
+.h2-left h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(38px,5vw,68px);font-weight:900;color:#fff;line-height:1}
+.h2-left p{color:rgba(255,255,255,.4);font-size:12px;line-height:1.75;max-width:270px;margin-top:10px}
+.h2-div{width:1px;height:110px;background:rgba(255,255,255,.14)}
+.h2-right h2{font-family:'Barlow Condensed',sans-serif;font-size:clamp(38px,5vw,68px);font-weight:900;color:var(--blue);line-height:1}
+.h2-car-top{position:absolute;right:80px;top:50%;transform:translateY(-50%);width:300px;filter:drop-shadow(0 20px 60px rgba(37,99,235,.4));animation:floatY 5s ease-in-out infinite}
+.btn-get{background:var(--blue);color:#fff;padding:11px 30px;border-radius:8px;font-size:13px;font-weight:700;border:none;cursor:pointer;margin-top:22px;transition:background .2s}
+.btn-get:hover{background:var(--blue-l)}
+
+/* FILTER */
+.filter-bar{padding:26px 60px 0;display:flex;gap:8px;flex-wrap:wrap}
+.f-tab{font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;padding:6px 14px;border-radius:20px;border:1px solid var(--gray-b);background:transparent;cursor:pointer;transition:all .2s;color:var(--gray)}
+.f-tab.active,.f-tab:hover{background:var(--dark);color:#fff;border-color:var(--dark)}
+.filter-sel{padding:12px 60px 0;display:flex;gap:10px}
+.f-select{font-size:12px;padding:7px 14px;border:1px solid var(--gray-b);border-radius:6px;background:#fff;color:#374151;outline:none;cursor:pointer}
+
+/* CAR GRID */
+.car-grid-wrap{padding:18px 60px 50px}
+.car-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.c-card{background:#fff;border-radius:14px;border:1px solid var(--gray-b);overflow:hidden;transition:box-shadow .25s,transform .25s}
+.c-card:hover{box-shadow:0 12px 40px rgba(0,0,0,.1);transform:translateY(-4px)}
+.c-img{width:100%;height:148px;object-fit:cover;background:#111}
+.c-body{padding:13px}
+.c-price{background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:7px}
+.c-name{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:#111;text-transform:uppercase;letter-spacing:.5px}
+.c-sub{font-size:10px;color:var(--gray);margin-top:2px}
+.c-specs{display:flex;gap:10px;margin:8px 0}
+.c-spec{font-size:10px;color:var(--gray)}
+.c-spec b{color:#111;font-weight:600}
+.explore-more{text-align:center;padding-bottom:50px}
+.btn-explore{border:1px solid var(--gray-b);color:#374151;background:#fff;padding:10px 28px;border-radius:8px;font-size:12px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.btn-explore:hover{background:var(--dark);color:#fff;border-color:var(--dark)}
+
+/* ══════════════════════════════════════
+   PAGE 3 – MOTORCYCLES
+══════════════════════════════════════ */
+.hero3{
+  position:relative;height:100vh;min-height:600px;
+  background:linear-gradient(135deg,#080811 0%,#0d1520 55%,#080811 100%);
+  display:flex;align-items:center;overflow:hidden;padding-top:54px;
+}
+.h3-content{position:relative;z-index:2;padding:0 60px;max-width:460px}
+.h3-content h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(48px,7vw,88px);font-weight:900;color:#fff;line-height:.88;text-transform:uppercase}
+.h3-content p{color:rgba(255,255,255,.4);font-size:12px;line-height:1.75;margin-top:12px;max-width:300px}
+.h3-sell{position:absolute;right:80px;top:50%;transform:translateY(-60%);text-align:center;z-index:2}
+.h3-sell h2{font-family:'Barlow Condensed',sans-serif;font-size:clamp(30px,4vw,52px);font-weight:900;color:#fff;line-height:1}
+.h3-sell h2 span{color:var(--blue)}
+.h3-moto{position:absolute;right:60px;bottom:0;width:50%;max-width:620px;filter:drop-shadow(0 20px 60px rgba(37,99,235,.25));animation:floatY 5s ease-in-out infinite}
+
+/* ══════════════════════════════════════
+   PAGE 4 – RENT
+══════════════════════════════════════ */
+.hero4{
+  position:relative;height:100vh;min-height:600px;
+  background:linear-gradient(160deg,#f0f4ff 0%,#e8eeff 100%);
+  display:flex;align-items:center;overflow:hidden;padding-top:54px;
+}
+.h4-nav-light nav{background:rgba(255,255,255,.9);border-bottom:1px solid rgba(0,0,0,.08)}
+.h4-content{position:relative;z-index:2;padding:0 60px;max-width:460px}
+.h4-badge{display:inline-block;background:rgba(37,99,235,.1);color:var(--blue);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:18px}
+.h4-content h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(44px,6vw,78px);font-weight:900;color:#111;line-height:.92;text-transform:uppercase}
+.h4-content h1 span{color:var(--blue)}
+.h4-content p{color:var(--gray);font-size:13px;line-height:1.75;margin-top:14px;max-width:350px}
+.h4-btns{display:flex;gap:12px;margin-top:26px}
+.btn-blue{background:var(--blue);color:#fff;padding:10px 22px;border-radius:6px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:background .2s}
+.btn-blue:hover{background:var(--blue-l)}
+.btn-light{background:transparent;color:#111;padding:10px 22px;border-radius:6px;font-size:13px;font-weight:600;border:1px solid #d1d5db;cursor:pointer;transition:all .2s}
+.btn-light:hover{background:#111;color:#fff;border-color:#111}
+.h4-car{position:absolute;right:-40px;bottom:0;width:58%;max-width:760px;filter:drop-shadow(0 30px 60px rgba(0,0,20,.15));animation:floatY 6s ease-in-out infinite}
+
+/* RENT FILTERS */
+.rent-filter-bar{padding:24px 60px 0;display:flex;gap:8px;flex-wrap:wrap}
+.rent-selects{padding:12px 60px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.rent-count{font-size:12px;color:var(--gray);margin-left:auto}
+
+/* RENT CARDS */
+.rent-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.rent-card{background:#fff;border-radius:14px;border:1px solid var(--gray-b);overflow:hidden;transition:box-shadow .25s,transform .25s}
+.rent-card:hover{box-shadow:0 12px 40px rgba(0,0,0,.1);transform:translateY(-4px)}
+.rent-img{width:100%;height:148px;object-fit:cover;background:#111}
+.rent-body{padding:13px}
+.rent-daily{background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:7px}
+.rent-name{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:#111;text-transform:uppercase}
+.rent-sub{font-size:10px;color:var(--gray);margin-top:2px}
+.rent-specs{display:flex;gap:8px;margin:8px 0;flex-wrap:wrap}
+.rent-spec{font-size:10px;color:var(--gray)}
+.rent-spec b{color:#111;font-weight:600}
+.btn-rent{width:100%;background:var(--dark);color:#fff;border:none;padding:8px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.btn-rent:hover{background:var(--blue)}
+
+/* WHY RENT */
+.why-rent{padding:60px 60px;background:#f9fafc}
+.why-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:28px;color:#111}
+.why-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.why-card{background:#fff;border-radius:12px;padding:22px;border:1px solid var(--gray-b)}
+.why-icon{font-size:26px;margin-bottom:10px}
+.why-card h4{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.why-card p{font-size:12px;color:var(--gray);line-height:1.7}
+.why-link{font-size:11px;color:var(--blue);font-weight:700;margin-top:10px;display:inline-block;letter-spacing:.5px}
+
+/* ══════════════════════════════════════
+   PAGE 5 – CHECKOUT
+══════════════════════════════════════ */
+.checkout-wrap{padding:100px 60px 60px;background:#f5f7fb;min-height:100vh}
+.checkout-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:28px;max-width:1000px;margin:0 auto}
+.checkout-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:10px}
+.checkout-title{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;letter-spacing:-.5px;margin-bottom:26px}
+.checkout-secure{background:#fff;border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:12px;border:1px solid var(--gray-b);margin-bottom:20px}
+.checkout-secure .s-icon{font-size:20px}
+.checkout-secure h4{font-size:13px;font-weight:600;color:#111}
+.checkout-secure p{font-size:11px;color:var(--gray)}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gray);margin-bottom:6px}
+.form-group input{width:100%;padding:11px 14px;border:1.5px solid var(--gray-b);border-radius:8px;font-size:13px;font-family:'Barlow',sans-serif;outline:none;transition:border-color .2s;background:#fff}
+.form-group input:focus{border-color:var(--blue)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-pay{width:100%;background:var(--dark);color:#fff;border:none;padding:14px;border-radius:8px;font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;margin-top:6px;transition:background .2s}
+.btn-pay:hover{background:var(--blue)}
+.checkout-note{text-align:center;font-size:10px;color:var(--gray);margin-top:12px;letter-spacing:.5px}
+/* ORDER SUMMARY */
+.order-summary{background:#fff;border-radius:14px;overflow:hidden;border:1px solid var(--gray-b)}
+.order-img{width:100%;height:180px;object-fit:cover;background:#111}
+.order-body{padding:18px}
+.order-fleet{background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:1px;display:inline-block;margin-bottom:10px}
+.order-name{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:#111}
+.order-sub{font-size:11px;color:var(--gray);margin-bottom:16px}
+.order-line{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-b);font-size:12px}
+.order-line:last-of-type{border:none}
+.order-line .label{color:var(--gray);text-transform:uppercase;letter-spacing:.5px;font-size:10px;font-weight:600}
+.order-line .val{font-weight:600;color:#111}
+.order-line .val.green{color:#22c55e}
+.order-total{background:#f9fafc;border-radius:10px;padding:14px;margin-top:14px;display:flex;justify-content:space-between;align-items:center}
+.order-total .tl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gray)}
+.order-total .tv{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#111}
+.order-total .cur{font-size:10px;font-weight:700;background:var(--dark);color:#fff;padding:2px 6px;border-radius:4px;align-self:flex-end;margin-bottom:4px}
+
+/* ══════════════════════════════════════
+   PAGE 6 – SIGN UP
+══════════════════════════════════════ */
+.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f0f4ff 0%,#e8eeff 100%);padding:80px 20px 40px}
+.auth-box{background:#fff;border-radius:20px;padding:44px 40px;width:100%;max-width:420px;box-shadow:0 20px 80px rgba(37,99,235,.12)}
+.auth-logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;letter-spacing:2px;margin-bottom:30px;text-align:center}
+.auth-logo span{color:var(--blue)}
+.auth-title{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:#111;margin-bottom:24px;text-align:center}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--gray);font-size:12px}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--gray-b)}
+.auth-field{width:100%;padding:12px 16px;border:1.5px solid var(--gray-b);border-radius:8px;font-size:13px;font-family:'Barlow',sans-serif;outline:none;margin-bottom:12px;transition:border-color .2s}
+.auth-field:focus{border-color:var(--blue)}
+.btn-auth{width:100%;padding:13px;border-radius:8px;font-size:14px;font-weight:700;letter-spacing:.5px;border:none;cursor:pointer;transition:all .2s;margin-bottom:10px}
+.btn-auth-primary{background:var(--blue);color:#fff}
+.btn-auth-primary:hover{background:var(--blue-l)}
+.btn-auth-outline{background:#fff;color:#111;border:1.5px solid var(--gray-b)}
+.btn-auth-outline:hover{border-color:#111}
+.auth-switch{text-align:center;font-size:13px;color:var(--gray);margin-top:16px}
+.auth-switch a{color:var(--blue);font-weight:600}
+.auth-forgot{color:var(--blue);font-size:12px;text-align:center;display:block;margin-top:-4px;margin-bottom:14px;cursor:pointer}
+
+/* ══════════════════════════════════════
+   LUMINOUS LEARNING (MOBILE APP)
+══════════════════════════════════════ */
+.ll-wrap{min-height:100vh;background:#f0f4ff;display:flex;align-items:center;justify-content:center;padding:80px 20px 40px}
+.ll-phone{background:#fff;border-radius:28px;width:340px;min-height:640px;box-shadow:0 24px 80px rgba(37,99,235,.18);overflow:hidden;border:6px solid #e8eeff}
+.ll-header{background:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-b)}
+.ll-brand{display:flex;align-items:center;gap:8px}
+.ll-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700}
+.ll-name{font-size:14px;font-weight:700;color:var(--blue)}
+.ll-mic{font-size:16px;color:var(--gray);cursor:pointer}
+.ll-tabs{display:flex;background:#f3f4f6;margin:14px 14px 0;border-radius:10px;overflow:hidden}
+.ll-tab{flex:1;padding:9px;text-align:center;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--gray)}
+.ll-tab.active{background:var(--blue);color:#fff;border-radius:8px}
+/* PODIUM */
+.ll-podium{display:flex;align-items:flex-end;justify-content:center;gap:12px;padding:24px 14px 10px}
+.pod-item{display:flex;flex-direction:column;align-items:center;gap:5px}
+.pod-avatar{border-radius:50%;object-fit:cover;border:3px solid var(--gray-b)}
+.pod-1 .pod-avatar{width:60px;height:60px;border-color:gold}
+.pod-2 .pod-avatar,.pod-3 .pod-avatar{width:46px;height:46px}
+.pod-crown{font-size:18px;text-align:center}
+.pod-rank{width:20px;height:20px;background:var(--blue);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:-10px;position:relative;z-index:1}
+.pod-name{font-size:11px;font-weight:600;color:#111;text-align:center}
+.pod-xp{font-size:10px;color:var(--blue);font-weight:700}
+/* LIST */
+.ll-list{padding:8px 14px}
+.ll-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-b)}
+.ll-row:last-child{border:none}
+.ll-rank-num{width:18px;font-size:12px;font-weight:700;color:var(--gray);text-align:center}
+.ll-row-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover;background:#e8eeff}
+.ll-row-info{flex:1}
+.ll-row-name{font-size:12px;font-weight:600;color:#111}
+.ll-row-streak{font-size:10px;color:var(--gray)}
+.ll-row-xp{font-size:12px;font-weight:700;color:var(--blue)}
+/* MY RANK */
+.ll-myrank{margin:10px 14px;background:var(--blue);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.ll-myrank-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px}
+.ll-myrank-info{flex:1}
+.ll-myrank-label{font-size:9px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1px}
+.ll-myrank-rank{font-size:18px;font-weight:900;color:#fff;font-family:'Barlow Condensed',sans-serif}
+.ll-myrank-sub{font-size:11px;color:rgba(255,255,255,.7)}
+.ll-myrank-right{text-align:right}
+.ll-myrank-xp{font-size:13px;font-weight:700;color:#fff}
+.ll-myrank-today{font-size:10px;color:rgba(255,255,255,.6)}
+.ll-arrow{color:rgba(255,255,255,.6);font-size:16px}
+/* ACHIEVEMENTS */
+.ll-achievements{padding:10px 14px 6px}
+.ll-ach-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.ll-ach-title{font-size:13px;font-weight:700;color:#111}
+.ll-ach-view{font-size:11px;color:var(--blue);font-weight:600}
+.ll-ach-row{display:flex;gap:10px}
+.ll-ach-card{background:#f9fafc;border-radius:10px;padding:12px;flex:1;text-align:center;border:1px solid var(--gray-b)}
+.ll-ach-icon{font-size:22px;margin-bottom:6px}
+.ll-ach-name{font-size:10px;font-weight:700;color:#111}
+.ll-ach-when{font-size:9px;color:var(--gray)}
+/* BOTTOM NAV */
+.ll-bottom-nav{display:flex;background:#fff;border-top:1px solid var(--gray-b);padding:10px 0 6px}
+.ll-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+.ll-nav-icon{font-size:18px;color:var(--gray)}
+.ll-nav-label{font-size:9px;color:var(--gray);font-weight:500}
+.ll-nav-item.active .ll-nav-icon,.ll-nav-item.active .ll-nav-label{color:var(--blue)}
+.ll-nav-item.active .ll-nav-icon-wrap{background:var(--blue);border-radius:12px;padding:5px 14px}
+.ll-nav-icon-wrap{padding:5px 14px}
+
+/* ══════════════════════════════════════
+   PAGE INDICATOR
+══════════════════════════════════════ */
+.page-nav{
+  position:fixed;bottom:24px;right:24px;z-index:600;
+  display:flex;flex-direction:column;gap:6px;
+}
+.pn-btn{
+  width:38px;height:38px;border-radius:50%;border:none;
+  background:var(--gray-b);color:var(--gray);font-size:10px;font-weight:700;
+  cursor:pointer;transition:all .2s;
+}
+.pn-btn.active{background:var(--blue);color:#fff;box-shadow:0 4px 16px rgba(37,99,235,.4)}
+.pn-btn:hover{background:var(--blue);color:#fff}
+
+/* الحاوية الرئيسية للسكشن */
+.hero-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 80vh; /* يغطي أغلب ارتفاع الشاشة */
+    background-color: #0b111e; /* لون الخلفية الداكنة الخاص بموقعك */
+    color: #ffffff;
+    padding: 0 10%;
+    overflow: hidden;
+    position: relative;
+}
+
+/* الجزء الأيسر (الكلام) */
+.hero-left {
+    flex: 1;
+    max-width: 50%;
+    z-index: 2; /* للتأكد من بقاء النص فوق أي تأثيرات */
+}
+
+.sub-headline {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px 15px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.main-headline {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 20px;
+}
+
+.blue-text {
+    color: #2563eb; /* اللون الأزرق المكتوب به كلمة MOTION */
+}
+
+.hero-description {
+    font-size: 1rem;
+    color: #9ca3af;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    max-width: 450px;
+}
+
+/* تنسيق الأزرار */
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #2563eb;
+    color: white;
+}
+
+.btn-secondary {
+    border: 1px solid #ffffff;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+/* الجزء الأيمن (السيارة ودمجها مع الباك جراوند) */
+.hero-right {
+    flex: 1;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 55%; /* يأخذ أكثر من نصف الشاشة بقليل في اليمين */
+    height: 100%;
+    /* هنا السحر: التدرج يقوم بعمل غطاء داكن يدمج الصورة مع يسار الشاشة */
+    background: linear-gradient(to right, #0b111e 0%, rgba(11, 17, 30, 0.4) 40%, rgba(11, 17, 30, 0) 100%), 
+                url('https://images.unsplash.com/photo-1617814076367-b759c7d7e738?q=80&w=1200') no-repeat center right;
+    background-size: cover;
+    z-index: 1;
+}
+ 
+
+/* الألوان والخطوط المخصصة للهوية البصرية لمشروع السيارات */
+:root {
+    --primary-blue: #2563eb;
+    --neon-blue: #3b82f6;
+    --dark-matte: #0a0e17;
+    --card-gradient: linear-gradient(180deg, #111827 0%, #030712 100%);
+    --bg-light: #f8fafc;
+    --text-muted: #94a3b8;
+}
+
+/* تنسيق الـ Hero المنقسم */
+.car-hero {
+    display: flex;
+    height: 480px;
+    position: relative;
+    overflow: hidden;
+    background-color: #ffffff;
+}
+
+.hero-split {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 8%;
+}
+
+.dark-side {
+    background-color: var(--dark-matte);
+    color: #ffffff;
+}
+
+.light-side {
+    background-color: #ffffff;
+    color: #000000;
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.hero-content-left h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 52px;
+    line-height: 1.1;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
+
+.hero-content-left p {
+    color: var(--text-muted);
+    font-size: 14px;
+    max-width: 380px;
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+
+.btn-started {
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 12px 35px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-started:hover {
+    background-color: #1d4ed8;
+}
+
+.hero-content-right h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.1;
+    padding-right: 10%;
+}
+
+.blue-highlight {
+    color: var(--primary-blue);
+}
+
+/* سيارة العرض العلوية المثبتة بالمنتصف */
+.hero-car-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    width: 260px;
+}
+
+.hero-car-center img {
+    width: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 25px 35px rgba(0,0,0,0.35));
+}
+
+/* أزرار الفلترة */
+.filter-section {
+    padding: 40px 6% 20px 6%;
+    background-color: var(--bg-light);
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    overflow-x: auto;
+}
+
+.tab-btn {
+    background-color: #e2e8f0;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #475569;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.tab-btn.active {
+    background-color: var(--primary-blue);
+    color: #ffffff;
+}
+
+.filter-dropdowns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 20px;
+}
+
+.dropdown-group {
+    display: flex;
+    gap: 15px;
+}
+
+.dropdown-group select {
+    border: 1px solid #cbd5e1;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    background-color: #fff;
+    color: #334155;
+}
+
+.results-count {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+}
+
+/* شبكة كروت المنتجات السوداء الدائرية */
+.cars-grid-container {
+    background-color: var(--bg-light);
+    padding: 0 6% 60px 6%;
+}
+
+.cars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.car-card {
+    background: var(--card-gradient);
+    border-radius: 24px;
+    overflow: hidden;
+    color: #ffffff;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.card-img-wrapper {
+    position: relative;
+    padding: 20px 20px 0 20px;
+}
+
+.card-img-wrapper img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 18px;
+}
+
+.price-tag {
+    position: absolute;
+    bottom: 10px;
+    right: 30px;
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(5px);
+    color: #ffffff;
+    padding: 5px 14px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.card-info {
+    padding: 20px 25px 25px 25px;
+}
+
+.card-info h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.car-details {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+}
+
+.specs-tags {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.spec {
+    font-size: 11px;
+    color: #cbd5e1;
+    background-color: rgba(255, 255, 255, 0.06);
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.spec i {
+    color: var(--neon-blue);
+    margin-right: 4px;
+}
+
+.btn-details {
+    display: block;
+    text-align: center;
+    background-color: #ffffff;
+    color: #000000;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: 0.3s;
+}
+
+.btn-details:hover {
+    background-color: #e2e8f0;
+}
+
+/* الترقيم وزر الاستكشاف بالأسفل */
+.pagination-container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.btn-explore {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #e2e8f0;
+    padding: 14px 35px;
+    border-radius: 25px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    transition: 0.3s;
+}
+
+.btn-explore i {
+    margin-left: 6px;
+    color: var(--primary-blue);
+}
+
+.page-indicator {
+    font-size: 9px;
+    color: #94a3b8;
+    margin-top: 15px;
+    font-weight: 600;
+}
+/* الحاوية الخارجية لشبكة السيارات */
+.cars-grid-container {
+    background-color: #f8fafc;
+    padding: 40px 6% 60px 6%;
+}
+
+/* توزيع الكروت بالتساوي: 3 في الأعلى و 3 في الأسفل لشاشات الكمبيوتر */
+.cars-layout-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* يعرض 3 كروت بالضبط في كل صف */
+    gap: 30px; /* المسافة الفاصلة والمنظمة بين الكروت */
+}
+
+/* التنسيق الداخلي المتطور للكروت الداكنة من الـ Figma */
+.car-card {
+    background: linear-gradient(180deg, #111827 0%, #030712 100%);
+    border-radius: 24px;
+    overflow: hidden;
+    color: #ffffff;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* تأثير تفاعلي عند تمرير الماوس فوق الكرت */
+.car-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px rgba(37, 99, 235, 0.15); /* إضاءة زرقاء خفيفة */
+}
+
+.card-img-wrapper {
+    position: relative;
+    padding: 20px 20px 0 20px;
+}
+
+.card-img-wrapper img {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    border-radius: 18px;
+}
+
+/* شارة السعر المدمجة فوق الصورة */
+.price-tag {
+    position: absolute;
+    bottom: 12px;
+    right: 32px;
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    color: #ffffff;
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.card-info {
+    padding: 20px 25px 25px 25px;
+}
+
+.card-info h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.car-details {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 16px;
+}
+
+.specs-tags {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.spec {
+    font-size: 11px;
+    color: #cbd5e1;
+    background-color: rgba(255, 255, 255, 0.06);
+    padding: 5px 12px;
+    border-radius: 6px;
+}
+
+.spec i {
+    color: #3b82f6;
+    margin-right: 5px;
+}
+
+/* تصميم الزر الأبيض الأنيق المتواجد في التصميم */
+.btn-details {
+    display: block;
+    text-align: center;
+    background-color: #ffffff;
+    color: #000000;
+    text-decoration: none;
+    padding: 13px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: 0.2s ease;
+}
+
+.btn-details:hover {
+    background-color: #e2e8f0;
+}
+
+/* التجاوب الذكي للهواتف المحمولة */
+@media (max-width: 992px) {
+    .cars-layout-grid {
+        grid-template-columns: repeat(2, 1fr); /* يعرض كرتين في الصف على التابلت */
+    }
+}
+
+@media (max-width: 600px) {
+    .cars-layout-grid {
+        grid-template-columns: 1fr; /* يعرض كرت واحد مفرود على شاشات الهواتف */
+    }
+}
+ /* الألوان الأساسية لصفحة الإيجار */
+:root {
+    --rent-bg: #f4f6fa;
+    --navy-blue: #2563eb;
+    --dark-card-head: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    --text-dark: #0f172a;
+}
+
+/* تنسيق الهيدر المضيء (Rent Hero) */
+.rent-hero {
+    display: flex;
+    background-color: var(--rent-bg);
+    padding: 60px 8%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.rent-hero-left {
+    flex: 1;
+    max-width: 500px;
+}
+
+.badge-premium {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #64748b;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.rent-hero-left h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+}
+
+.rent-hero-left .blue-text {
+    color: var(--navy-blue);
+}
+
+.hero-desc {
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.hero-rent-btns {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-explore-fleet {
+    background-color: #0f172a;
+    color: #fff;
+    border: none;
+    padding: 14px 28px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-concierge {
+    background-color: transparent;
+    color: #0f172a;
+    border: 1px solid #cbd5e1;
+    padding: 14px 28px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* بطاقة الجي كلاس في الهيدر */
+.rent-hero-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.suv-bg-card {
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 40px;
+    width: 380px;
+    height: 340px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+}
+
+.suv-bg-card img {
+    width: 115%;
+    object-fit: contain;
+    filter: drop-shadow(0 20px 15px rgba(0,0,0,0.15));
+}
+
+/* بار الفلترة */
+.rent-filter-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 8%;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.filter-pills {
+    display: flex;
+    gap: 10px;
+}
+
+.pill-btn {
+    background-color: #f1f5f9;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.pill-btn.active {
+    background-color: var(--navy-blue);
+    color: #ffffff;
+}
+
+.results-text {
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+}
+
+/* شبكة كروت الإيجار المخصصة */
+.rent-grid-section {
+    background-color: var(--rent-bg);
+    padding: 50px 8%;
+}
+
+.rent-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.rent-card {
+    background-color: #ffffff;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+    border: 1px solid #e2e8f0;
+}
+
+.rent-img-holder {
+    background: var(--dark-card-head);
+    padding: 30px 20px 10px 20px;
+    position: relative;
+    height: 180px;
+    display: flex;
+    align-items: center;
+}
+
+.rent-img-holder img {
+    width: 100%;
+    object-fit: contain;
+}
+
+.rent-price-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 14px;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.rent-price-badge small {
+    font-size: 9px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* تفاصيل كرت الإيجار السفلي */
+.rent-info-body {
+    padding: 25px;
+}
+
+.rent-info-body h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.rent-sub {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-bottom: 20px;
+}
+
+.rent-specs-row {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.spec-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.spec-item .lbl {
+    font-size: 9px;
+    color: #94a3b8;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.spec-item .val {
+    font-size: 12px;
+    color: var(--text-dark);
+    font-weight: 700;
+}
+
+.spec-item .val small {
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+/* محدد الفترات الزمنية الزرار المتجاورة */
+.rent-duration-selector {
+    display: flex;
+    background-color: #f1f5f9;
+    padding: 4px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.duration-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.duration-btn.active {
+    background-color: #ffffff;
+    color: var(--text-dark);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* زر إيجار الآن الكحلي الداكن الممتد */
+.btn-rent-now {
+    width: 100%;
+    background-color: #0b1120;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: 0.2s;
+}
+
+.btn-rent-now:hover {
+    background-color: var(--navy-blue);
+}
+
+/* قسم المميزات السفلي */
+.features-section {
+    background-color: #ffffff;
+    padding: 70px 8%;
+}
+
+.features-wrapper {
+    display: flex;
+    gap: 60px;
+    align-items: center;
+}
+
+.features-left-cards {
+    flex: 1;
+    display: flex;
+    gap: 20px;
+}
+
+.feat-box {
+    flex: 1;
+    background-color: var(--rent-bg);
+    padding: 30px;
+    border-radius: 16px;
+}
+
+.feat-icon {
+    color: var(--navy-blue);
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.feat-box h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.feat-box p {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+.features-right-text {
+    flex: 1;
+}
+
+.features-right-text h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+}
+
+.features-right-text p {
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.learn-more-link {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--navy-blue);
+    text-decoration: none;
+    letter-spacing: 0.5px;
+}
+
+.learn-more-link i {
+    margin-left: 5px;
+}
+
+/* التجاوب مع الشاشات */
+@media (max-width: 992px) {
+    .rent-cards-grid, .features-wrapper {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+    }
+    .rent-hero {
+        flex-direction: column;
+        text-align: center;
+    }
+    .rent-hero-right {
+        margin-top: 40px;
+        justify-content: center;
+    }
+}
+/* تنسيق الحاوية الرئيسية التي تجمع الكلام والصورة */
+.rent-hero {
+    display: flex;
+    background-color: #f8fafc; /* اللون الخلفي الهادئ للتصميم */
+    padding: 80px 8%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    overflow: hidden;
+}
+
+/* ==========================================
+   تنسيقات السكشن الخاص بالكلام (الجهة اليسرى)
+   ========================================== */
+.rent-hero-left {
+    flex: 1;
+    max-width: 540px;
+}
+
+/* النص الصغير العلوي رمادي اللون */
+.badge-premium {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #64748b;
+    display: block;
+    margin-bottom: 15px;
+}
+
+/* العنوان الرئيسي الكبير المتناسق بالخط العريض العريض */
+.rent-hero-left h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 64px;
+    font-weight: 800;
+    line-height: 1.05;
+    color: #0f172a;
+    margin-bottom: 20px;
+}
+
+
+/* تلوين كلمة Extraordinary باللون الأزرق المعتمد في التصميم */
+.rent-hero-left .blue-text {
+    color: #2563eb;
+    
+}
+
+/* الوصف النصي أسفل العنوان */
+.hero-desc {
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.6;
+    margin-bottom: 35px;
+}
+
+/* أزرار الكلام */
+.hero-rent-btns {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-explore-fleet {
+    background-color: #0f172a;
+    color: #fff;
+    border: none;
+    padding: 15px 32px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-explore-fleet:hover {
+    background-color: #2563eb;
+}
+
+.btn-concierge {
+    background-color: transparent;
+    color: #0f172a;
+    border: 1px solid #cbd5e1;
+    padding: 15px 32px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-concierge:hover {
+    background-color: #f1f5f9;
+}
+
+/* ==========================================
+   تنسيقات السكشن الخاص بالصورة (الجهة اليمنى)
+   ========================================== */
+.rent-hero-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    min-height: 450px;
+}
+
+/* الخلفية الملونة الدائرية تحت الكارت */
+.bg-shape-decoration {
+    position: absolute;
+    width: 370px;
+    height: 370px;
+    background-color: #e0f2fe;
+    border-radius: 48px;
+    transform: rotate(-12deg);
+    z-index: 1;
+    opacity: 0.6;
+}
+
+/* الكارت الأبيض الحاضن المائل */
+.suv-bg-card-tilted {
+    position: relative;
+    z-index: 2;
+    background-color: #ffffff;
+    width: 390px;
+    height: 390px;
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(4deg);
+    box-shadow: 0 25px 50px rgba(15, 23, 42, 0.04);
+}
+
+/* صورة السيارة وظلالها الاحترافية */
+.gclass-front-view {
+    width: 95%;
+    height: auto;
+    object-fit: contain;
+    transform: rotate(-4deg) scale(1.05); /* لتبدو السيارة مستقيمة والكرت مائل */
+    filter: drop-shadow(0 30px 20px rgba(0, 0, 0, 0.45));
+    transition: all 0.4s ease-in-out;
+}
+
+/* تأثير تحريك الصورة التفاعلي */
+.suv-bg-card-tilted:hover .gclass-front-view {
+    transform: rotate(-4deg) scale(1.1) translateY(-8px);
+    filter: drop-shadow(0 40px 25px rgba(0, 0, 0, 0.55));
+}
+
+/* تحسينات الشاشات الصغيرة لتجعل الكلام والصورة تحت بعض في الهواتف */
+@media (max-width: 768px) {
+    .rent-hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 5%;
+    }
+    .hero-rent-btns {
+        justify-content: center;
+    }
+    .rent-hero-right {
+        margin-top: 40px;
+    }
+}
+/* --- تنسيق سكشن المنتج --- */
+.product-box {
+    background-color: #f0f4ff;
+    border-radius: 20px;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.product-image {
+    width: 100%;
+    height: 180px;
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-title { 
+    font-weight: 800; 
+    font-size: 18px; 
+    margin: 0; 
+    color: #1a1a1a;
+}
+
+.product-desc { 
+    color: #666; 
+    font-size: 14px; 
+    margin: 0; 
+}
+
+.product-price { 
+    color: #4a7eff; 
+    font-weight: 700; 
+    font-size: 18px; 
+}
+
+/* --- تنسيق البوكس السفلي --- */
+.bottom-sheet {
+    background: white;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 1000;
+}
+
+.handle { 
+    width: 50px; 
+    height: 5px; 
+    background: #ccc; 
+    border-radius: 3px; 
+    margin: 0 auto 10px; 
+}
+
+.btn { 
+    width: 100%; 
+    padding: 15px; 
+    border-radius: 8px; 
+    border: none; 
+    font-size: 16px; 
+    cursor: pointer; 
+    font-weight: bold;
+}
+
+.btn-primary { 
+    background-color: #0088ff; 
+    color: white; 
+}
+
+.btn-secondary { 
+    background-color: white; 
+    border: 1px solid #ddd; 
+    color: #333; 
+}
+.main-container {
+    display: flex;
+    justify-content: flex-end; /* لدفع المحتوى لجهة اليمين */
+    gap: 20px;
+    padding: 20px;
+     
+}
+
+.right-column {
+    display: flex;
+    flex-direction: column; /* لترتيب البوكسات فوق بعضها في العمود */
+    gap: 1px;
+    
+    
+}
+
+.product-box, .vintage-box {
+    width: 300px; /* توحيد عرض البوكسات */
+    background-color: #d5dfee;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+/* تنسيق الـ View Collection */
+.view-collection {
+    color: #4a7eff;
+    text-decoration: none;
+    font-weight: bold;
+}
+.product-box {
+    position: relative;
+    top: -40px; /* ارفع العنصر للأعلى بمقدار 20 بكسل */
+}
+ .vintage-box {
+    position: relative;
+    top: -40px; /* قم بزيادة هذا الرقم (مثلاً -60px) لرفعه أكثر للأعلى */
+}
+.pagination-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;    /* توسيط أفقي */
+    justify-content: center; /* توسيط عمودي */
+    width: 100%;            /* إجبار الحاوية على أخذ عرض الصفحة كاملاً */
+    margin: 30px 0;         /* مسافة من الأعلى والأسفل */
+}
+
+/* لضمان توسيط الزر نفسه */
+.btn-explore {
+    display: flex;          /* لجعل الأيقونة والنص في صف واحد */
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;         /* سحب الزر للوسط */
+}
+/* إزالة المسافات من الحاوية التي تحمل الصورة */
+.rent-img-holder {
+    margin: -20px -20px 20px -20px; /* سحب الصورة لتغطي الحواف (بافتراض أن الـ padding هو 20px) */
+    overflow: hidden;               /* لقص أطراف الصورة بحيث لا تخرج عن حدود البوكس */
+    border-top-left-radius: 20px;   /* الحفاظ على تدوير الزوايا العلوية */
+    border-top-right-radius: 20px;
+}
+
+/* التأكد من أن الصورة تأخذ كامل عرض المساحة المتاحة */
+.rent-img-holder img {
+    width: 100%;
+    height: 200px;                  /* يمكنك تعديل الارتفاع كما تحب */
+    object-fit: cover;              /* هذه أهم خاصية لضبط الصورة */
+}
+/* الحاوية التي تحمل الصورة */
+.suv-bg-card-tilted {
+    position: relative; /* ضروري لجعل الصورة تلتصق بها */
+    height: 300px;      /* حدد الارتفاع الذي تريده للبوكس */
+    border-radius: 20px;
+    overflow: hidden;   /* لإخفاء أي جزء خارج عن البوكس */
+}
+
+/* الصورة بداخلها */
+.suv-bg-card-tilted img {
+    position: absolute; /* تجبر الصورة على التموضع داخل الحاوية */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  /* تملأ المكان بالكامل */
+}

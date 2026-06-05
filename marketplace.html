@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TURPOTIC | Car Marketplace</title>
+    <!-- استيراد الخطوط والأيقونات الخاصة بالتصميم -->
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <div id="p1" class="page active">
+   <!-- شريط التنقل العلوي   بالخلفية البيضاء    -->
+<nav class="main-navbar">
+    <!-- اسم الموقع (لوجو النص) في أقصى اليسار -->
+    <div class="nav-logo">
+        <a href="index.html"><span>TURPO</span>TIC</a>
+    </div>
+
+    <!-- الروابط الأساسية للموقع مجمعة في المنتصف -->
+    <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="marketplace.html">Car</a></li>
+        <li><a href="rent.html">Rent</a></li>
+        <li><a href="motorcycles.html">Motorcycles</a></li>
+    </ul>
+
+     <!-- الأيقونات التفاعلية في أقصى اليمين مع الحفاظ على مسافات متناسقة -->
+    <div class="nav-right">
+               <span class="nav-icon" onclick="window.location.href='luminous.html '">🔍</span>
+        <span class="nav-icon" onclick="window.location.href='checkout.html'">🛒</span>
+        <span class="nav-icon" onclick="window.location.href='login.html'">👤</span>
+    </div>
+ 
+</nav>
+</head>
+
+<body>
+
+    
+    <!-- الهيدر الخاص بصفحة السيارات (لوحة منقسمة لأسود وأبيض) -->
+    <header class="car-hero">
+        <div class="hero-split dark-side">
+            <div class="hero-content-left">
+                <h1>Find your<br>Dream Car</h1>
+                <p>Discover premium vehicles tailored to your lifestyle. Performance, luxury, and reliability — all in one place.</p>
+                <button class="btn-started">Get Started</button>
+            </div>
+        </div>
+        
+        <!-- سيارة العرض في المنتصف من الأعلى -->
+        <div class="hero-car-center">
+            <img src=" https://www.pngplay.com/wp-content/uploads/13/Porsche-911-PNG-Clipart-Background.png" alt="Top View Blue Car">
+        </div>
+
+        <div class="hero-split light-side">
+            <div class="hero-content-right">
+                <h2>Sell your<br><span class="blue-highlight">Car</span></h2>
+            </div>
+        </div>
+    </header>
+
+    <!-- منطقة التصفية والفرز (Filter Bar) -->
+    <section class="filter-section">
+        <div class="filter-tabs">
+            <button class="tab-btn active">ALL MODELS</button>
+            <button class="tab-btn">ELECTRIC</button>
+            <button class="tab-btn">GRAND TOURING</button>
+            <button class="tab-btn">SUPER SPORT</button>
+            <button class="tab-btn">LUXURY SUV</button>
+        </div>
+        
+        <div class="filter-dropdowns">
+            <div class="dropdown-group">
+                <select>
+                    <option>BRAND: ALL</option>
+                </select>
+                <select>
+                    <option>PRICE: HIGH TO LOW</option>
+                    <option>PRICE: LOW TO HIGH</option>
+                </select>
+            </div>
+            <span class="results-count">SHOWING 24 RESULTS</span>
+        </div>
+    </section>
+
+   <!-- شبكة تصفح المنتجات المتناسقة (3 في الأعلى و 3 في الأسفل) -->
+<section class="cars-grid-container">
+    <div class="cars-layout-grid">
+        
+        <!-- الصف العلوي (Top Row) -->
+        <!-- كرت 1 -->
+        <div class="car-card">
+            <div class="card-img-wrapper">
+                <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=500&q=80" alt="Porsche 911">
+                <span class="price-tag">$148,500</span>
+            </div>
+            <div class="card-info">
+                <h3>911 CARRERA S</h3>
+                <p class="car-details">HERITAGE SILVER | 2024</p>
+                <div class="specs-tags">
+                    <span class="spec"><i class="fa-solid fa-gauge-high"></i> 3.0L H6</span>
+                    <span class="spec"><i class="fa-solid fa-bolt"></i> 443 HP</span>
+                </div>
+                <a href="checkout.html" class="btn-details">VIEW DETAILS</a>
+            </div>
+        </div>
+
+        <!-- كرت 2 -->
+        <div class="car-card">
+            <div class="card-img-wrapper">
+                  <img src="https://images.unsplash.com/photo-1621135802920-133df287f89c?auto=format&fit=crop&w=500&q=80" alt="Lamborghini Huracan">
+                <span class="price-tag">$276,000</span>
+            </div>
+            <div class="card-info">
+                <h3>F8 TRIBUTO</h3>
+                <p class="car-details">ROSSO CORSA | 2024</p>
+                <div class="specs-tags">
+                    <span class="spec"><i class="fa-solid fa-gauge-high"></i> 3.9L V8</span>
+                    <span class="spec"><i class="fa-solid fa-bolt"></i> 710 HP</span>
+                </div>
+                <a href="checkout.html" class="btn-details">VIEW DETAILS</a>
+            </div>
+        </div>
+
+        <!-- كرت 3 -->
+        <div class="car-card">
+            <div class="card-img-wrapper">
+                <img src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=500&q=80" alt="Audi RS">
+                <span class="price-tag">$139,900</span>
+            </div>
+            <div class="card-info">
+                <h3>RS E-TRON GT</h3>
+                <p class="car-details">MYTHOS BLACK | 2024</p>
+                <div class="specs-tags">
+                    <span class="spec"><i class="fa-solid fa-charging-station"></i> ELECTRIC</span>
+                    <span class="spec"><i class="fa-solid fa-bolt"></i> 637 HP</span>
+                </div>
+                <a href="checkout.html" class="btn-details">VIEW DETAILS</a>
+            </div>
+        </div>
+
+
+        <!-- الصف السفلي (Bottom Row) -->
+        <!-- كرت 4 -->
+        <div class="car-card">
+            <div class="card-img-wrapper">
+                <img src="https://images.unsplash.com/photo-1606016159991-dfe4f2746ad5?auto=format&fit=crop&w=500&q=80" alt="Aston Martin">
+                <span class="price-tag">$165,500</span>
+            </div>
+            <div class="card-info">
+                <h3>VANTAGE V8</h3>
+                <p class="car-details">BRITISH RACING GREEN | 2024</p>
+                <div class="specs-tags">
+                    <span class="spec"><i class="fa-solid fa-gauge-high"></i> 4.0L V8</span>
+                    <span class="spec"><i class="fa-solid fa-bolt"></i> 503 HP</span>
+                </div>
+                <a href="checkout.html" class="btn-details">VIEW DETAILS</a>
+            </div>
+        </div>
+
+        <!-- كرت 5 -->
+        <div class="car-card">
+            <div class="card-img-wrapper">
+                 <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=500&q=80" alt="Porsche 911">
+                <span class="price-tag">$106,500</span>
+            </div>
+            <div class="card-info">
+                <h3>CAYMAN GT4</h3>
+                <p class="car-details">RACING YELLOW | 2024</p>
+                <div class="specs-tags">
+                    <span class="spec"><i class="fa-solid fa-gauge-high"></i> 4.0L H6</span>
+                    <span class="spec"><i class="fa-solid fa-bolt"></i> 414 HP</span>
+                </div>
+                <a href="checkout.html" class="btn-details">VIEW DETAILS</a>
+            </div>
+        </div>
+
+        <!-- كرت 6 -->
+        <div class="car-card">
+            <div class="card-img-wrapper">
+                <img src="https://images.unsplash.com/photo-1621135802920-133df287f89c?auto=format&fit=crop&w=500&q=80" alt="Lamborghini Huracan">
+                <span class="price-tag">$334,700</span>
+            </div>
+            <div class="card-info">
+                <h3>HURACÁN STO</h3>
+                <p class="car-details">BIANCO ASIOP | 2024</p>
+                <div class="specs-tags">
+                    <span class="spec"><i class="fa-solid fa-gauge-high"></i> 5.2L V10</span>
+                    <span class="spec"><i class="fa-solid fa-bolt"></i> 631 HP</span>
+                </div>
+                <a href="checkout.html" class="btn-details">VIEW DETAILS</a>
+            </div>
+        </div>
+
+   
+</section>
+
+ <div class="pagination-container" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+    <button class="btn-explore">
+        EXPLORE MORE INVENTORY
+        <i class="fa-solid fa-arrow-right"></i>
+    </button>
+    <p class="page-indicator">PAGE 1 OF 4</p>
+</div>
+
+<footer>
+    <div class="footer-brand">
+      <div class="logo"><span>TURPO</span>TIC</div>
+      <p>Redefining the automotive experience through curated excellence and technical precision.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Gallery</h4>
+      <a href="marketplace.html">Sale</a><a href="rent.html">Rent</a><a href="motorcycles.html">Motorcycles</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="#">Contact</a><a href="#">Privacy Policy</a><a href="#">Terms of service</a>
+    </div>
+    <div class="footer-copy">© 2026 TURPOTIC GALLERY. PRECISION MOTION DEFINED.</div>
+  </footer>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

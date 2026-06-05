@@ -1,0 +1,72 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout – TURPOTIC</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     PAGE 5 – CHECKOUT
+══════════════════════════════════════ -->
+<div id="p5" class="page active">
+  <div class="checkout-wrap">
+    <div class="checkout-grid">
+      <div class="checkout-form-part">
+        <span class="checkout-label">Secure Checkout</span>
+        <h2 class="checkout-title"> Confirm Your Order</h2>
+        <div class="checkout-secure">
+          <span class="s-icon">🔒</span>
+          <div>
+            <h4>SSL Encrypted Connection</h4>
+            <p>Your billing information is fully protected and secured.</p>
+          </div>
+        </div>
+        <form onsubmit="return false">
+          <div class="form-group">
+            <label>Cardholder Name</label>
+            <input type="text" placeholder="John Doe">
+          </div>
+          <div class="form-group">
+            <label>Card Number</label>
+            <input type="text" placeholder="0000 0000 0000 0000">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Expiry Date</label>
+              <input type="text" placeholder="MM/YY">
+            </div>
+            <div class="form-group">
+              <label>CVC / CVV</label>
+              <input type="text" placeholder="123">
+            </div>
+          </div>
+          <button class="btn-pay">Complete Transaction</button>
+          <p class="checkout-note">By clicking, you authorize the dynamic appraisal hold.</p>
+        </form>
+      </div>
+
+      <div class="order-summary">
+        <img class="order-img" src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=500&q=80" alt="Order Car">
+        <div class="order-body">
+          <span class="order-fleet">FLEET RESERVATION</span>
+          <h3 class="order-name"> RSE-TRONGT</h3>
+          <p class="order-sub">Hypercar Category Rental</p>
+          <div class="order-line"><span class="label">Duration</span><span class="val">1 Day Rental</span></div>
+          <div class="order-line"><span class="label">Base Rate</span><span class="val">$12,000.00</span></div>
+          <div class="order-line"><span class="label">Insurance</span><span class="val green">Included</span></div>
+          <div class="order-total">
+            <span class="tl">Total</span>
+            <div style="display:flex;align-items:baseline"><span class="tv">$147,420.00</span><span class="cur">USD</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
